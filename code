@@ -1,0 +1,26 @@
+import requests
+from bs4 import BeautifulSoup
+
+# URL of the website to scrape
+url = 'https://www.flipkart.com/mobiles/apple~brand/pr?sid=tyy,4io'
+# Send HTTP request
+response = requests.get(url)
+response.raise_for_status()  # Check for request errors
+
+# Parse the HTML content
+soup = BeautifulSoup(response.text, 'html.parser')
+
+data = []
+for paragraph in soup.find_all('p'):
+    data.append(paragraph.get_text())
+
+# Store data in a structured format (e.g., CSV)
+import csv
+
+with open('scraped_data.csv', 'w', newline='', encoding='utf-8') as file:
+    writer = csv.writer(file)
+    writer.writerow(['Text'])
+    for item in data:
+        writer.writerow([item])
+
+print('Data has been scraped and saved to scraped_data.csv')
